@@ -1,40 +1,33 @@
-//use std::string;
+use std::env::{self, Args};
 mod operations;
-
+mod parsing;
 use operations::structs_arithmetic_op::*;
+use parsing::parsing::*;
+
+const CANTIDAD_ARGUMENTOS: usize=3;
 
 fn main() {
-    
-    let mut pila = Vec::new();
+    let args:Vec<String>=env::args().collect();
+    if args.len()!=CANTIDAD_ARGUMENTOS{
+        eprint!("Pasar ruta del archivo como argumento");
+        std::process::exit(1);
+    }
+    let path=&args[1];
+    println!("{}",path);
+    //let mut pila = Vec::new();
     let element_emit="A";
 
-    pila.push("255");
-    pila.push("20");
-    pila.push("+");
-    let mut suma= Sum::new();
-    while let Some(element)=pila.pop(){
-        
-        if element=="+"{
-            println!("soy un mas");
-            
-        }else{
-            if let Ok(parsed_element)=element.parse::<i16>(){
-                suma.add_operand(parsed_element);
-            }
-            
-        }
+    if let Err(e)=parse_fmt(path){
+        eprintln!("Hubo un error al procesar el archivo: {}",e);
     }
-    print!("{}",suma.make_operation());
-
-
 
     //inicio invocacion emit
-    if element_emit.parse::<u8>().is_ok(){
+   /* if element_emit.parse::<u8>().is_ok(){
         emit(element_emit);
     }else{
         println!("? ");
     }
-    //fin emit de 1
+    //fin emit de 1*/
     
 }
 
