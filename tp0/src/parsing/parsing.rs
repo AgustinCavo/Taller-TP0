@@ -1,6 +1,8 @@
 use std::fs::File;
 use std::collections::{hash_map, HashMap};
 use std::io::{self, BufRead, Error, ErrorKind};
+
+use crate::operations::structs_arithmetic_op::*;
 const ERROR_DEFINITION: &str="Error al procesar las definiciones:";
 const ERROR_STACKING_DEFINITIONS: &str="No se termino una definicion antes de empezar otra";
 const ERROR_MISSING_STARITING_INDICATOR: &str="Se encontro ; sin : en la definicion";
@@ -57,18 +59,26 @@ fn get_definitions(data: Vec<String>) -> io::Result<(Vec<String>, HashMap<String
     
     let mut iter = data.into_iter();
 
+    
+    let basic_operations=load_basic_operations_map();
+
     while let Some(item) = iter.next() {
         if item == ":" {
             if let Some(key) = iter.next() {
-                //agregar checkeo sea primal
+                
+                let valid_word=&key;
+                
                 if key_being_checked.is_some() {
                     return Err(Error::new(ErrorKind::InvalidData, ERROR_STACKING_DEFINITIONS));
+                }else if is_valid_word_definition(valid_word,&basic_operations) {
+                    key_being_checked = Some(key);
+                    values_for_actual_key.clear();
+                    parsing_values = true;
+                }else{
+                    return Err(Error::new(ErrorKind::InvalidData, ERROR_STACKING_DEFINITIONS));
                 }
-                key_being_checked = Some(key);
-                values_for_actual_key.clear();
-                parsing_values = true;
-            } else {
                 
+            } else{
                 return Err(Error::new(ErrorKind::InvalidData, ERROR_NAME_DEFINITION));
             }
         } else if item == ";" {
@@ -96,7 +106,32 @@ fn get_definitions(data: Vec<String>) -> io::Result<(Vec<String>, HashMap<String
     Ok((remeaning_operations_data, result))
 
 }
+fn is_valid_word_definition(key: &str, basic_operations_map: &HashMap<String, Box<dyn Fn() -> Box<dyn ArithmeticOp>>>)->bool{
+    if basic_operations_map.contains_key(key){
+        return false;
+    }else{
+        match key.parse::<u8>(){
+            Ok(_)=>{
+                return false;
+            },
+            Err(_)=>{
+                return true;
+            }
+        }
+    }
+}
 
+fn load_basic_operations_map() -> HashMap<String, Box<dyn Fn() -> Box<dyn ArithmeticOp>>> {
+    let mut basic_operations: HashMap<String, Box<dyn Fn() -> Box<dyn ArithmeticOp>>> = HashMap::new();
+    
+    
+    basic_operations.insert("+".to_string(), Box::new(|| Box::new(Sum { quantity: 2, operands: Vec::new() })));
+    basic_operations.insert("-".to_string(), Box::new(|| Box::new(Sub { quantity: 2, operands: Vec::new() })));
+    basic_operations.insert("/".to_string(), Box::new(|| Box::new(Div { quantity: 2, operands: Vec::new() })));
+    basic_operations.insert("*".to_string(), Box::new(|| Box::new(Mul { quantity: 2, operands: Vec::new() })));
+    
+    basic_operations
+}
 fn applied_definitions(data: (Vec<String>, HashMap<String, Vec<String>>))-> io::Result<Vec<String>>{
     let (vec_data, map_data) = data;
 
@@ -107,3 +142,4 @@ fn applied_definitions(data: (Vec<String>, HashMap<String, Vec<String>>))-> io::
     
     Ok(vec_data) 
 }
+
