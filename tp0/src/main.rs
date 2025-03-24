@@ -1,6 +1,8 @@
 use std::env::{self, Args};
 use std::io::{self, BufRead};
 
+use std::process;
+use std::collections::HashMap;
 mod operations;
 mod parsing;
 use parsing::parsing::*;
@@ -21,14 +23,16 @@ fn main() {
     match parse_fth(path){
         Ok(data)=>{
             match analize_definitions(data){
-                Ok(data_cleaned)=>{
-                    for item in &data_cleaned.0{
-                        println!("{}",item);
+                Ok(data_cleaned) => {
+                    // Si es Ok, muestra los elementos del Vec<String>
+                    for item in &data_cleaned {
+                        println!("{}", item);
                     }
-                    
                 }
-                Err(e)=>{
+                Err(e) => {
+                    // Si es Err, muestra el HashMap
                     println!("{} {}", ERROR_DEFINICIONES, e);
+               
                 }
             }
         }Err (e) =>{

@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::collections::{hash_map, HashMap};
 use std::io::{self, BufRead, Error, ErrorKind};
+use std::result;
 
 use crate::operations::structs_arithmetic_op::*;
 const ERROR_DEFINITION: &str="Error al procesar las definiciones:";
@@ -29,27 +30,35 @@ pub fn parse_fth(path: &str)->io::Result<Vec<String>>{
     Ok(data)
     
 }
-pub fn analize_definitions(data: Vec<String>)->io::Result<Vec<String>>{
-
-    match get_definitions(data){
-        
-        Ok(tuple)=>{
-            Ok(tuple.0)
+pub fn analize_definitions(data: Vec<String>) -> io::Result<Vec<String>> {
+    match get_definitions(data) {
+        Ok((data_cleaned, new_words_map)) => {
             
+            println!("Contenido de las operaciones restantes:");
+            for item in &data_cleaned {
+                println!("{}", item);
+            }
+            println!("Contenido del HashMap:");
+            for (key, value) in new_words_map {
+                println!("Clave: {}", key);
+                for val in value {
+                    println!("    Valor: {}", val);
+                }
+            }
+            Ok(data_cleaned)
         }
-        Err(e)=>{
-            println!("{} {}", ERROR_DEFINITION, e);
+        Err(e) => {
             Err(e)
         }
     }
-    
+}   
+ 
 
-}
 
 fn get_definitions(data: Vec<String>) -> io::Result<(Vec<String>, HashMap<String, Vec<String>>)>{
     let mut remeaning_operations_data: Vec<String> = Vec::new();
        
-    let mut result = HashMap::new();
+    let mut new_words_map = HashMap::new();
     
     let mut key_being_checked: Option<String> = None;
     let mut values_for_actual_key: Vec<String> = Vec::new();
@@ -66,31 +75,31 @@ fn get_definitions(data: Vec<String>) -> io::Result<(Vec<String>, HashMap<String
         if item == ":" {
             if let Some(key) = iter.next() {
                 
-                let valid_word=&key;
+                let valid_word = &key;
                 
                 if key_being_checked.is_some() {
                     return Err(Error::new(ErrorKind::InvalidData, ERROR_STACKING_DEFINITIONS));
-                }else if is_valid_word_definition(valid_word,&basic_operations) {
+                } else if is_valid_word_definition(valid_word, &basic_operations, &new_words_map) {
                     key_being_checked = Some(key);
                     values_for_actual_key.clear();
                     parsing_values = true;
-                }else{
-                    return Err(Error::new(ErrorKind::InvalidData, ERROR_STACKING_DEFINITIONS));
+                } else {
+                    return Err(Error::new(ErrorKind::InvalidData, ERROR_NAME_DEFINITION));
                 }
                 
-            } else{
+            } else {
                 return Err(Error::new(ErrorKind::InvalidData, ERROR_NAME_DEFINITION));
             }
         } else if item == ";" {
-    
+        
             if let Some(key) = key_being_checked.take() {
-                result.insert(key, values_for_actual_key.clone());
+                new_words_map.insert(key, std::mem::replace(&mut values_for_actual_key, Vec::new()));
                 parsing_values = false;
             } else {
                 return Err(Error::new(ErrorKind::InvalidData, ERROR_MISSING_STARITING_INDICATOR));
             }
         } else {
-    
+        
             if parsing_values {
                 values_for_actual_key.push(item);
             } else {
@@ -103,11 +112,13 @@ fn get_definitions(data: Vec<String>) -> io::Result<(Vec<String>, HashMap<String
         return Err(Error::new(ErrorKind::InvalidData, ERROR_MISSING_FINISHING_INDICATOR));
     }
 
-    Ok((remeaning_operations_data, result))
+    Ok((remeaning_operations_data, new_words_map))
 
 }
-fn is_valid_word_definition(key: &str, basic_operations_map: &HashMap<String, Box<dyn Fn() -> Box<dyn ArithmeticOp>>>)->bool{
+fn is_valid_word_definition(key: &str, basic_operations_map: &HashMap<String, Box<dyn Fn() -> Box<dyn ArithmeticOp>>>,result: &HashMap<String, Vec<String>>)->bool{
     if basic_operations_map.contains_key(key){
+        return false;
+    }else if result.contains_key(key){
         return false;
     }else{
         match key.parse::<u8>(){
@@ -142,4 +153,3 @@ fn applied_definitions(data: (Vec<String>, HashMap<String, Vec<String>>))-> io::
     
     Ok(vec_data) 
 }
-
