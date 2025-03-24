@@ -25,9 +25,10 @@ fn main() {
             match analize_definitions(data){
                 Ok(data_cleaned) => {
                     // Si es Ok, muestra los elementos del Vec<String>
-                    for item in &data_cleaned {
+                    /*for item in &data_cleaned {
                         println!("{}", item);
-                    }
+                    }*/
+                    println!("ok");
                 }
                 Err(e) => {
                     // Si es Err, muestra el HashMap
