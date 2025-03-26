@@ -31,23 +31,17 @@ pub fn parse_fth(path: &str)->io::Result<Vec<String>>{
     
 }
 pub fn analize_definitions(data: Vec<String>) -> io::Result<Vec<String>> {
+    
     match get_definitions(data) {
         Ok((data_cleaned, new_words_map)) => {
-            
-            println!("Contenido de las operaciones restantes:");
-            for item in &data_cleaned {
-                println!("{}", item);
-            }
-            println!("Contenido del HashMap:");
-            for (key, value) in new_words_map {
-                println!("Clave: {}", key);
-                for val in value {
-                    println!("    Valor: {}", val);
+            match apply_definitions(data_cleaned, new_words_map){
+                Ok(stack_ready)=>{
+                    Ok(stack_ready)
+                }
+                Err(e)=>{
+                    Err(io::Error::new(io::ErrorKind::Other, e.to_string()))
                 }
             }
-
-
-            Ok(data_cleaned)
         }
         Err(e) => {
             Err(e)
@@ -148,13 +142,20 @@ fn load_basic_operations_map() -> HashMap<String, Box<dyn Fn() -> Box<dyn Arithm
     
     basic_operations
 }
-/*fn applied_definitions(data: (Vec<String>, HashMap<String, Vec<String>>))-> io::Result<Vec<String>>{
-    let (vec_data, map_data) = data;
+fn apply_definitions(data: Vec<String>, new_operations: HashMap<String, Vec<String>>)-> io::Result<Vec<String>>{
+    let basic_operations = load_basic_operations_map();
 
-    
-    println!("Datos procesados: {:?}", vec_data);
-    println!("Definiciones en el mapa: {:?}", map_data);
+    println!("Contenido de las operaciones restantes:");
+    for item in &data {
+        println!("{}", item);
+    }
+    println!("Contenido del HashMap nuevo:");
+    for (key, value) in new_operations {
+        println!("Clave: {}", key);
+        for val in value {
+            println!("    Valor: {}", val);
+        }
+    }
 
-    
-    Ok(vec_data) 
-}*/
+    Ok(data) 
+}
