@@ -59,9 +59,9 @@ fn get_definitions(data: Vec<String>) -> io::Result<(Vec<String>, HashMap<String
 
     while let Some(item) = iter.next() {
         if item == ":" {
-            parse_colon(&mut iter, &mut key_being_checked, &mut values_for_actual_key, &mut parsing_values, &basic_operations, &mut new_words_map)?;
+            parse_colon(&mut iter, &mut key_being_checked, &mut values_for_actual_key, &mut parsing_values)?;
         } else if item == ";" {
-            parse_semicolon(&mut key_being_checked, &mut values_for_actual_key, &mut parsing_values, &mut new_words_map)?;
+            parse_semicolon(&mut key_being_checked, &mut values_for_actual_key, &mut parsing_values, &mut new_words_map,&basic_operations)?;
         } else {
             if parsing_values {
                values_for_actual_key.push(item);
@@ -79,13 +79,13 @@ fn get_definitions(data: Vec<String>) -> io::Result<(Vec<String>, HashMap<String
     Ok((remeaning_operations_data, new_words_map))
 }
 
-fn parse_colon(iter: &mut impl Iterator<Item = String>, key_being_checked: &mut Option<String>, values_for_actual_key: &mut Vec<String>, parsing_values: &mut bool, basic_operations: &HashMap<String, Box<dyn Fn() -> Box<dyn ArithmeticOp>>>, new_words_map: &mut HashMap<String, Vec<String>>) -> io::Result<()> {
+fn parse_colon(iter: &mut impl Iterator<Item = String>, key_being_checked: &mut Option<String>, values_for_actual_key: &mut Vec<String>, parsing_values: &mut bool) -> io::Result<()> {
     if let Some(key) = iter.next() {
         let valid_word = &key;
 
         if key_being_checked.is_some() {
             return Err(Error::new(ErrorKind::InvalidData, ERROR_STACKING_DEFINITIONS));
-        } else if is_valid_word_definition(valid_word, basic_operations, new_words_map) {
+        } else if is_valid_word_definition(valid_word) {
             *key_being_checked = Some(key);
             values_for_actual_key.clear();
             *parsing_values = true;
@@ -98,10 +98,21 @@ fn parse_colon(iter: &mut impl Iterator<Item = String>, key_being_checked: &mut 
     Ok(())
 }
 
-fn parse_semicolon(key_being_checked: &mut Option<String>, values_for_actual_key: &mut Vec<String>, parsing_values: &mut bool, new_words_map: &mut HashMap<String, Vec<String>>) -> io::Result<()> {
+fn parse_semicolon(key_being_checked: &mut Option<String>, values_for_actual_key: &mut Vec<String>, parsing_values: &mut bool, new_words_map: &mut HashMap<String, Vec<String>>,basic_operations: &HashMap<String, Box<dyn Fn() -> Box<dyn ArithmeticOp>>>,) -> io::Result<()> {
     if let Some(key) = key_being_checked.take() {
-        new_words_map.insert(key, std::mem::replace(values_for_actual_key, Vec::new()));
+
+     for i in 0..values_for_actual_key.len(){
+        if new_words_map.contains_key(&values_for_actual_key[i]){
+            if let Some(replacement) = new_words_map.get(&values_for_actual_key[i]) {
+                values_for_actual_key.splice(i..i + 1, replacement.iter().cloned());
+            }
+        }
+        
+     }
+     new_words_map.insert(key, values_for_actual_key.to_vec());
+        values_for_actual_key.clear();
         *parsing_values = false;
+        
     } else {
         return Err(Error::new(ErrorKind::InvalidData, ERROR_MISSING_STARITING_INDICATOR));
     }
@@ -114,12 +125,7 @@ fn finalize_key(key_being_checked: &Option<String>, values_for_actual_key: &Vec<
     }
     Ok(())
 }
-fn is_valid_word_definition(key: &str, basic_operations_map: &HashMap<String, Box<dyn Fn() -> Box<dyn ArithmeticOp>>>,new_words_map: &HashMap<String, Vec<String>>)->bool{
-    if basic_operations_map.contains_key(key){
-        return false;
-    }else if new_words_map.contains_key(key){
-        return false;
-    }else{
+fn is_valid_word_definition(key: &str)->bool{
         match key.parse::<i16>(){
             Ok(_)=>{
                 return false;
@@ -128,7 +134,6 @@ fn is_valid_word_definition(key: &str, basic_operations_map: &HashMap<String, Bo
                 return true;
             }
         }
-    }
 }
 
 fn load_basic_operations_map() -> HashMap<String, Box<dyn Fn() -> Box<dyn ArithmeticOp>>> {
