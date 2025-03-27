@@ -23,9 +23,7 @@ pub fn parse_fth(path: &str)->io::Result<Vec<String>>{
         for word in line.split_whitespace() {
             data.push(word.to_string());
         }
-    }
-    
-
+    }  
 
     Ok(data)
     
@@ -33,11 +31,9 @@ pub fn parse_fth(path: &str)->io::Result<Vec<String>>{
 pub fn analize_definitions(data: Vec<String>) -> io::Result<Vec<String>> {
     
     match get_definitions(data) {
-        Ok((data_cleaned, new_words_map)) => {
-            match apply_definitions(data_cleaned, new_words_map){
-                Ok(stack_ready)=>{
-                    Ok(stack_ready)
-                }
+        Ok((mut data_cleaned, mut new_words_map)) => {
+            match apply_definitions(&mut data_cleaned, &mut new_words_map){
+                Ok(())=> Ok(data_cleaned),
                 Err(e)=>{
                     Err(io::Error::new(io::ErrorKind::Other, e.to_string()))
                 }
@@ -66,9 +62,6 @@ fn get_definitions(data: Vec<String>) -> io::Result<(Vec<String>, HashMap<String
             if parsing_values {
                values_for_actual_key.push(item);
             } else {
-                for item in &remeaning_operations_data {
-                    println!("{}", item);
-                }
                 remeaning_operations_data.push(item);
             }
         }
@@ -110,8 +103,8 @@ fn parse_semicolon(key_being_checked: &mut Option<String>, values_for_actual_key
         
      }
      new_words_map.insert(key, values_for_actual_key.to_vec());
-        values_for_actual_key.clear();
-        *parsing_values = false;
+     values_for_actual_key.clear();
+     *parsing_values = false;
         
     } else {
         return Err(Error::new(ErrorKind::InvalidData, ERROR_MISSING_STARITING_INDICATOR));
@@ -147,20 +140,23 @@ fn load_basic_operations_map() -> HashMap<String, Box<dyn Fn() -> Box<dyn Arithm
     
     basic_operations
 }
-fn apply_definitions(data: Vec<String>, new_operations: HashMap<String, Vec<String>>)-> io::Result<Vec<String>>{
+fn apply_definitions(data: &mut Vec<String>, new_operations: &mut HashMap<String, Vec<String>>)-> io::Result<()>{
     let basic_operations = load_basic_operations_map();
-
-    println!("Contenido de las operaciones restantes:");
-    for item in &data {
-        println!("{}", item);
-    }
-    println!("Contenido del HashMap nuevo:");
-    for (key, value) in new_operations {
-        println!("Clave: {}", key);
-        for val in value {
-            println!("    Valor: {}", val);
+    let mut i = 0;
+    while i < data.len() {
+        if new_operations.contains_key(&data[i]) {
+            if let Some(replacement) = new_operations.get(&data[i]) {
+                
+                data.splice(i..i + 1, replacement.iter().cloned());
+                
+                i += replacement.len();
+                continue;
+            }
         }
+        
+        i += 1;
     }
-
-    Ok(data) 
+    println!("finish");
+    
+    Ok(()) 
 }

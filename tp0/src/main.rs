@@ -18,16 +18,15 @@ fn main() {
         std::process::exit(1);
     }
     let path=&args[1];
-    println!("{}",path);
     
     match parse_fth(path){
         Ok(data)=>{
             match analize_definitions(data){
                 Ok(data_cleaned) => {
                     // Si es Ok, muestra los elementos del Vec<String>
-                    /*for item in &data_cleaned {
+                    for item in &data_cleaned {
                         println!("{}", item);
-                    }*/
+                    }
                     println!("ok");
                 }
                 Err(e) => {
