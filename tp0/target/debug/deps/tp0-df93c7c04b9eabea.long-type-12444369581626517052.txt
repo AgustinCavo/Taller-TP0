@@ -1,0 +1,1 @@
+fn() -> HashMap<String, Box<(dyn Fn() -> Box<(dyn structs_arithmetic_op::ArithmeticOp + 'static)> + 'static)>> {load_basic_operations_map}
