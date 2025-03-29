@@ -55,7 +55,7 @@ impl ArithmeticOp for Sub {
         return false;
     }
     fn make_operation(&self) -> i16 {
-        return self.operands[0] - self.operands[1];
+        return self.operands[1] - self.operands[0];
     }
 
     fn quantity(&self) -> usize {
@@ -75,7 +75,7 @@ impl ArithmeticOp for Mul {
         return false;
     }
     fn make_operation(&self) -> i16 {
-        return self.operands[0] * self.operands[1];
+        return self.operands[1] * self.operands[0];
     }
     fn quantity(&self) -> usize {
         return self.quantity;
@@ -95,7 +95,7 @@ impl ArithmeticOp for Div {
         }
     }
     fn make_operation(&self) -> i16 {
-        return self.operands[0] / self.operands[1];
+        return self.operands[1] / self.operands[0];
     }
     fn quantity(&self) -> usize {
         return self.quantity;

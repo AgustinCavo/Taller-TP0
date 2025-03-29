@@ -22,6 +22,8 @@ pub fn calculate(data: &mut Vec<String>) {
                     if last_op.operands() == last_op.quantity() as usize {
                         let result = last_op.make_operation();
                         data.push(result.to_string());
+                        i+=1;
+                        ongoing_ops.pop();
                         println!("Resultado de la operación: {}", result);
                     }
                 }

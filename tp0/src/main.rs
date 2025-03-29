@@ -50,35 +50,8 @@ fn write_stack_results(vec: Vec<String>) -> io::Result<()> {
     };
 
     for element in vec {
-        writeln!(resutls, "{}", element);
+        write!(resutls, "{} ", element);
     }
 
     Ok(())
 }
-
-/*    //inicio invocacion emit
-    if element_emit.parse::<u8>().is_ok(){
-        emit(element_emit);
-    }else{
-        println!("? ");
-    }
-    //fin emit de 1
-
-
-
-fn dot(element: &str) {
-    println!("{}",element);
-}
-
-fn emit(element: &str){
-    match element.parse::<u8>(){
-        Ok(value)=>{
-            println!("{}",value as char);
-        },
-        Err(_)=>{
-            dot(element);
-        }
-    }
-
-}
-*/
