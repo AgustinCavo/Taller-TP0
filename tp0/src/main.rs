@@ -1,6 +1,6 @@
-use std::env::{self, Args};
+use std::env::{self};
 use std::fs::File;
-use std::io::{self, BufRead, Write};
+use std::io::{self, Write};
 mod calculation;
 mod operations;
 mod parsing;

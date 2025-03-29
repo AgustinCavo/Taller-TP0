@@ -135,6 +135,7 @@ fn finalize_key(
     }
     Ok(())
 }
+//verificiar que la palabra a almacenar no sea un numero
 fn is_valid_word_definition(key: &str) -> bool {
     match key.parse::<i16>() {
         Ok(_) => {
@@ -145,6 +146,8 @@ fn is_valid_word_definition(key: &str) -> bool {
         }
     }
 }
+
+//Aplicar las definiciones sobre la pila y replazar las palabras clave con los valores
 
 fn apply_definitions(
     data: &mut Vec<String>,
