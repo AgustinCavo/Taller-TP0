@@ -26,15 +26,20 @@ pub fn calculate(data: &mut Vec<String>) {
                     }
                     
                 }else if stack_operations.contains_key(last_op.name()){
-                    stack_operations_handler();
-                    ongoing_ops.pop();
+                    if stack_operations_handler(data, &mut i, last_op){
+                        ongoing_ops.pop();
+                    }
                 }
             }
         }
         i -= 1;
     }
-
-    println!("finish calculations");
+    if ongoing_ops.len()>0{
+        println!("Insuficientes operandos");    
+    }else{
+        println!("finish calculations");
+    }
+    
 }
 fn basic_operations_handler(data: &mut Vec<String>,i: &mut i32,last_op: &mut Box<dyn Operation>)->bool{
 
@@ -55,8 +60,62 @@ fn basic_operations_handler(data: &mut Vec<String>,i: &mut i32,last_op: &mut Box
     }
     return false;
 }
-fn stack_operations_handler(){
+fn stack_operations_handler(data: &mut Vec<String>,i: &mut i32,last_op: &mut Box<dyn Operation>)->bool{
+    
+    if let Ok(operand) = data[*i as usize].parse::<i16>() {
+        last_op.add_operand(operand);
+        println!("Agregué operando: {}", operand);
+        if last_op.operands() == last_op.quantity() as usize {
 
+            match last_op.name(){
+              "drop"=>{
+                data.pop();
+                
+              }
+              "dup"=>{
+                if let Some(last)=data.last(){
+                    data.push(last.to_owned());
+                } 
+                *i+=1;
+              }
+              "over"=>{
+                let over_position= (*i) as usize;
+                
+                if let Some(second) = data.get(over_position) {
+                    data.push(second.to_owned());
+                }
+                *i+=1;
+              }
+              "swap"=>{
+                if let (Some(a1), Some(a2)) = (data.pop(), data.pop()) {
+                    data.push(a1);
+                    data.push(a2);
+                }
+                *i+=1;
+             }
+                
+              "rot"=>{
+                if let Some(a1) = data.get(0) {
+                    data.push(a1.to_string());
+                    data.remove(0);
+                }
+                *i+=3;
+              }
+              _=>{
+                return false;
+              }
+            }
+            
+            //data.push(result.to_string());
+            //println!("Resultado de la operación: {}", result);
+            //*i+=1;
+           return true;
+        }else{        
+            return false;
+        }
+    }
+    println!("No hay suficientes elementos para realizar la operación.");
+    return false;
 }
 fn load_basic_operations_map() -> HashMap<String, Box<dyn Fn() -> Box<dyn Operation>>> {
     let mut basic_operations: HashMap<String, Box<dyn Fn() -> Box<dyn Operation>>> =
@@ -136,7 +195,7 @@ fn load_stack_operations_map()->HashMap<String, Box<dyn Fn() -> Box<dyn Operatio
         Box::new(|| {
             Box::new(Swap {
                 name:{"swap"}.to_string(),
-                quantity: 1,
+                quantity: 2,
                 operands: Vec::new(),
             })
         }),
@@ -146,7 +205,7 @@ fn load_stack_operations_map()->HashMap<String, Box<dyn Fn() -> Box<dyn Operatio
         Box::new(|| {
             Box::new(Over {
                 name:{"over"}.to_string(),
-                quantity: 1,
+                quantity: 2,
                 operands: Vec::new(),
             })
         }),
@@ -156,7 +215,7 @@ fn load_stack_operations_map()->HashMap<String, Box<dyn Fn() -> Box<dyn Operatio
         Box::new(|| {
             Box::new(Rot {
                 name:{"rot"}.to_string(),
-                quantity: 1,
+                quantity: 3,
                 operands: Vec::new(),
             })
         }),
