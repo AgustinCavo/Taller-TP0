@@ -141,7 +141,7 @@ fn load_basic_operations_map() -> HashMap<String, Box<dyn Fn() -> Box<dyn Arithm
     basic_operations
 }
 fn apply_definitions(data: &mut Vec<String>, new_operations: &mut HashMap<String, Vec<String>>)-> io::Result<()>{
-    let basic_operations = load_basic_operations_map();
+    
     let mut i = 0;
     while i < data.len() {
         if new_operations.contains_key(&data[i]) {
@@ -153,7 +153,6 @@ fn apply_definitions(data: &mut Vec<String>, new_operations: &mut HashMap<String
                 continue;
             }
         }
-        
         i += 1;
     }
     println!("finish");

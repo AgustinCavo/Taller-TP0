@@ -1,8 +1,6 @@
 use std::env::{self, Args};
-use std::io::{self, BufRead};
-
-use std::process;
-use std::collections::HashMap;
+use std::io::{self, Write, BufRead};
+use std::fs::File;
 mod operations;
 mod parsing;
 use parsing::parsing::*;
@@ -10,6 +8,7 @@ use parsing::parsing::*;
 const CANTIDAD_ARGUMENTOS: usize=3;
 const ERROR_DEFINICIONES: &str="Error al procesar las definiciones:";
 const ERROR_LECTURA_ARCHIVO: &str="Error al procesar el archivo:";
+const ERROR_ESCRITURA_ARCHIVO: &str="Error al escribir el archivo de salida:";
 
 fn main() {
     let args:Vec<String>=env::args().collect();
@@ -23,14 +22,21 @@ fn main() {
         Ok(data)=>{
             match analize_definitions(data){
                 Ok(data_cleaned) => {
-                    // Si es Ok, muestra los elementos del Vec<String>
+                
                     for item in &data_cleaned {
                         println!("{}", item);
                     }
-                    println!("ok");
+                    match write_stack_results(data_cleaned ){
+                        Ok(_)=>{
+                            println!("ok");
+                        }
+                        Err(e)=>{
+                            println!("{} {}", ERROR_ESCRITURA_ARCHIVO, e);
+                        }
+                    }
                 }
                 Err(e) => {
-                    // Si es Err, muestra el HashMap
+                 
                     println!("{} {}", ERROR_DEFINICIONES, e);
                
                 }
@@ -39,7 +45,21 @@ fn main() {
             println!("{} {}", ERROR_LECTURA_ARCHIVO, e);
         }
     }
-    
+
+}
+
+fn write_stack_results(vec: Vec<String>) -> io::Result<()> {
+  
+    let mut resutls = match File::create("stack.fth"){
+        Ok(file)=>file,
+        Err(e)=>return Err(e),
+    };
+
+    for element in vec {
+        writeln!(resutls, "{}", element); 
+    }
+
+    Ok(())
 }
 
 /*    //inicio invocacion emit
