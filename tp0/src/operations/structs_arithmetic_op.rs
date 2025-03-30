@@ -95,6 +95,7 @@ impl Operation for Mul {
 impl Operation for Div {
     fn add_operand(&mut self, element: i16) -> bool {
         if element == 0 {
+            println!("division-by-zero");
             return false;
         } else {
             self.operands.push(element);

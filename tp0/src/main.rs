@@ -26,7 +26,7 @@ fn main() {
                 calculate(&mut data_cleaned);
                 match write_stack_results(data_cleaned) {
                     Ok(_) => {
-                        println!("ok");
+                        // println!("ok");
                     }
                     Err(e) => {
                         println!("{} {}", ERROR_ESCRITURA_ARCHIVO, e);
@@ -50,7 +50,7 @@ fn write_stack_results(vec: Vec<String>) -> io::Result<()> {
     };
 
     for element in vec {
-        write!(resutls, "{} ", element);
+        write!(resutls, "{} ", element)?;
     }
 
     Ok(())

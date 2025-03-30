@@ -7,13 +7,13 @@ pub fn basic_operations_handler(
 ) -> bool {
     if let Ok(operand) = data[*i as usize].parse::<i16>() {
         last_op.add_operand(operand);
-        println!("Agregué operando: {}", operand);
+        //println!("Agregué operando: {}", operand);
         data.remove(*i as usize);
 
         if last_op.operands() == last_op.quantity() as usize {
             let result = last_op.make_operation();
             data.insert(*i as usize, result.to_string());
-            println!("Resultado de la operación: {}", result);
+            // println!("Resultado de la operación: {}", result);
             *i += 1;
             return true;
         } else {
@@ -30,7 +30,7 @@ pub fn stack_operations_handler(
     if let Ok(operand) = data[*i as usize].parse::<i16>() {
         last_op.add_operand(operand);
 
-        println!("Agregué operando: {}", operand);
+        //println!("Agregué operando: {}", operand);
         if last_op.operands() == last_op.quantity() as usize {
             match last_op.name() {
                 "drop" => {
@@ -40,7 +40,7 @@ pub fn stack_operations_handler(
                     if let Some(last) = data.last() {
                         data.push(last.to_owned());
                     }
-                    *i += 1;
+                    *i += 2;
                 }
                 "over" => {
                     let over_position = (*i) as usize;
@@ -75,20 +75,40 @@ pub fn stack_operations_handler(
     return false;
 }
 
-pub fn boolean_operations_handler(
+pub fn printing_operations_handler(
     data: &mut Vec<String>,
     i: &mut i32,
     last_op: &mut Box<dyn Operation>,
 ) -> bool {
     if let Ok(operand) = data[*i as usize].parse::<i16>() {
         last_op.add_operand(operand);
-        println!("Agregué operando: {}", operand);
-        data.pop();
+        //println!("Agregué operando: {}", operand);
+
         if last_op.operands() == last_op.quantity() as usize {
-            let result = last_op.make_operation();
-            data.insert(*i as usize, result.to_string());
-            println!("Resultado de la operación: {}", result);
-            *i += 1;
+            match last_op.name() {
+                "." => {
+                    last_op.make_operation();
+                    data.remove(*i as usize);
+                }
+                "emit" => {
+                    match ascii_to_string(data[*i as usize].parse::<i16>().ok()) {
+                        Some(result) => print!("{} ", result),
+                        None => println!("Error: No se pudo convertir a String válido"),
+                    }
+                    data.remove(*i as usize);
+                }
+                "Quotes" => {
+                    let over_position = (*i) as usize;
+
+                    if let Some(second) = data.get(over_position) {
+                        data.push(second.to_owned());
+                    }
+                    *i += 1;
+                }
+                _ => {
+                    return false;
+                }
+            }
             return true;
         } else {
             return false;
@@ -96,4 +116,13 @@ pub fn boolean_operations_handler(
     }
     println!("No hay suficientes elementos para realizar la operación.");
     return false;
+}
+fn ascii_to_string(ascii_value: Option<i16>) -> Option<String> {
+    if let Some(value) = ascii_value {
+        // Convertimos el valor ASCII a un carácter y luego a String
+        if let Some(ch) = char::from_u32(value as u32) {
+            return Some(ch.to_string());
+        }
+    }
+    None
 }

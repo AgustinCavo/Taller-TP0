@@ -68,14 +68,14 @@
 
 - name: "dot-quote multiples"
   code: |
-    ." hello"
+    ."hello"
     ." world"
   expected_output: "hello world"
   expected_stack: []
 
 - name: "dot-quote and cr"
   code: |
-    ." hello"
+    ."hello"
     cr
     ." world"
   expected_output: "hello\nworld"

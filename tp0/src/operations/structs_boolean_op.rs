@@ -178,21 +178,20 @@ impl Operation for Not {
     fn make_operation(&self) -> i16 {
         let operand1 = match self.operands[0].parse::<i16>() {
             Ok(num) => num,
-            Err(_) => 0,  
+            Err(_) => 0,
         };
-    
+
         let operand2 = match self.operands[1].parse::<i16>() {
             Ok(num) => num,
-            Err(_) => 0,  
+            Err(_) => 0,
         };
-    
+
         let result = operand1 | operand2;
-    
-    
+
         if result != 0 {
-            return -1;  
+            return -1;
         }
-        
+
         return 0;
     }
     fn quantity(&self) -> usize {

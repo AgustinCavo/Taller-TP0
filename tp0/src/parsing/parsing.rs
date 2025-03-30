@@ -148,24 +148,25 @@ fn is_valid_word_definition(key: &str) -> bool {
 }
 
 //Aplicar las definiciones sobre la pila y replazar las palabras clave con los valores
-
 fn apply_definitions(
     data: &mut Vec<String>,
     new_operations: &mut HashMap<String, Vec<String>>,
 ) -> io::Result<()> {
-    let mut i = 0;
-    while i < data.len() {
-        if new_operations.contains_key(&data[i]) {
-            if let Some(replacement) = new_operations.get(&data[i]) {
-                data.splice(i..i + 1, replacement.iter().cloned());
-
-                i += replacement.len();
-                continue;
+    let mut changed = true;
+    while changed {
+        changed = false;
+        let mut i = 0;
+        while i < data.len() {
+            if new_operations.contains_key(&data[i]) {
+                if let Some(replacement) = new_operations.get(&data[i]) {
+                    data.splice(i..i + 1, replacement.iter().cloned());
+                    i += replacement.len();
+                    changed = true;
+                    continue;
+                }
             }
+            i += 1;
         }
-        i += 1;
     }
-    println!("finish definitions");
-
     Ok(())
 }
