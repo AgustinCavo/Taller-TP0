@@ -16,7 +16,7 @@ pub fn parse_fth(path: &str) -> io::Result<Vec<String>> {
         let line = line?;
 
         for word in line.split_whitespace() {
-            data.push(word.to_string());
+            data.push(word.to_string().to_lowercase());
         }
     }
 
