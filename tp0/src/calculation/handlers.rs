@@ -8,11 +8,11 @@ pub fn basic_operations_handler(
     if let Ok(operand) = data[*i as usize].parse::<i16>() {
         last_op.add_operand(operand);
         println!("Agregué operando: {}", operand);
-        data.pop();
+        data.remove(*i as usize);
 
         if last_op.operands() == last_op.quantity() as usize {
             let result = last_op.make_operation();
-            data.push(result.to_string());
+            data.insert(*i as usize,result.to_string());
             println!("Resultado de la operación: {}", result);
             *i += 1;
             return true;
@@ -28,7 +28,10 @@ pub fn stack_operations_handler(
     last_op: &mut Box<dyn Operation>,
 ) -> bool {
     if let Ok(operand) = data[*i as usize].parse::<i16>() {
+     
         last_op.add_operand(operand);
+        
+        
         println!("Agregué operando: {}", operand);
         if last_op.operands() == last_op.quantity() as usize {
             match last_op.name() {
@@ -50,10 +53,7 @@ pub fn stack_operations_handler(
                     *i += 1;
                 }
                 "swap" => {
-                    if let (Some(a1), Some(a2)) = (data.pop(), data.pop()) {
-                        data.push(a1);
-                        data.push(a2);
-                    }
+                    data.swap(*i as usize, (*i + 1) as usize);
                     *i += 1;
                 }
 

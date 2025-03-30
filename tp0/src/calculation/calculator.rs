@@ -18,19 +18,21 @@ pub fn calculate(data: &mut Vec<String>) {
         if let Some(op_fn) = basic_operations.get(&data[i as usize]) {
             ongoing_ops.push(op_fn());
             println!("Cargué operación: {}", &data[i as usize]);
-            data.pop();
+            data.remove(i as usize);
         } else if let Some(op_fn) = stack_operations.get(&data[i as usize]) {
             ongoing_ops.push(op_fn());
             println!("Cargué operación: {}", &data[i as usize]);
-            data.pop();
+            data.remove(i as usize);
         } else {
             if let Some(last_op) = ongoing_ops.last_mut() {
                 if basic_operations.contains_key(last_op.name()) {
                     if basic_operations_handler(data, &mut i, last_op) {
+                        
                         ongoing_ops.pop();
                     }
                 } else if stack_operations.contains_key(last_op.name()) {
                     if stack_operations_handler(data, &mut i, last_op) {
+                        println!("realize operacion {}",last_op.name());
                         ongoing_ops.pop();
                     }
                 }else if conditional_operations.contains_key(last_op.name()){
@@ -38,6 +40,8 @@ pub fn calculate(data: &mut Vec<String>) {
                         ongoing_ops.pop();
                     }
                 }
+            }else{
+                println!("deberias saltar no matar {}",&data[i as usize]);
             }
         }
         i -= 1;
