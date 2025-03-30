@@ -4,11 +4,10 @@ use crate::operations::structs_arithmetic_op::*;
 use crate::operations::structs_boolean_op::*;
 use crate::operations::structs_stack_op::*;
 
-
 pub fn calculate(data: &mut Vec<String>) {
     let basic_operations = load_basic_operations_map();
     let stack_operations = load_stack_operations_map();
-    let conditional_operations=load_conditional_operations_map();
+    let conditional_operations = load_conditional_operations_map();
     let mut ongoing_ops: Vec<Box<dyn Operation>> = Vec::new();
     let mut i = data.len() as i32 - 1;
 
@@ -23,25 +22,30 @@ pub fn calculate(data: &mut Vec<String>) {
             ongoing_ops.push(op_fn());
             println!("Cargué operación: {}", &data[i as usize]);
             data.remove(i as usize);
+        } else if let Some(op_fn) = conditional_operations.get(&data[i as usize]) {
+            ongoing_ops.push(op_fn());
+            println!("Cargué operación: {}", &data[i as usize]);
+            data.remove(i as usize);
         } else {
             if let Some(last_op) = ongoing_ops.last_mut() {
                 if basic_operations.contains_key(last_op.name()) {
                     if basic_operations_handler(data, &mut i, last_op) {
-                        
+                        println!("realize operacion {}", last_op.name());
                         ongoing_ops.pop();
                     }
                 } else if stack_operations.contains_key(last_op.name()) {
                     if stack_operations_handler(data, &mut i, last_op) {
-                        println!("realize operacion {}",last_op.name());
+                        println!("realize operacion {}", last_op.name());
                         ongoing_ops.pop();
                     }
-                }else if conditional_operations.contains_key(last_op.name()){
-                    if conditional_operations_handler(data, &mut i, last_op){
+                } else if conditional_operations.contains_key(last_op.name()) {
+                    if boolean_operations_handler(data, &mut i, last_op) {
+                        println!("realize operacion {}", last_op.name());
                         ongoing_ops.pop();
                     }
                 }
-            }else{
-                println!("deberias saltar no matar {}",&data[i as usize]);
+            } else {
+                println!("deberias saltar no matar {}", &data[i as usize]);
             }
         }
         i -= 1;
