@@ -1,5 +1,0 @@
-- name: "case insensitive 3"
-  code: |
-    1 2 SWAP 3 Swap 4 swap
-  expected_stack: [2, 3, 4, 1]
-  

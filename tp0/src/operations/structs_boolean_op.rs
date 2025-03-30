@@ -42,6 +42,9 @@ impl Operation for Equ {
     }
 
     fn make_operation(&self) -> i16 {
+        if self.operands[0] == self.operands[1] {
+            return -1;
+        }
         return 0;
     }
     fn quantity(&self) -> usize {
@@ -64,6 +67,9 @@ impl Operation for Grt {
     }
 
     fn make_operation(&self) -> i16 {
+        if self.operands[0] > self.operands[1] {
+            return -1;
+        }
         return 0;
     }
     fn quantity(&self) -> usize {
@@ -86,6 +92,9 @@ impl Operation for Lst {
     }
 
     fn make_operation(&self) -> i16 {
+        if self.operands[0] < self.operands[1] {
+            return -1;
+        }
         return 0;
     }
     fn quantity(&self) -> usize {
@@ -108,6 +117,18 @@ impl Operation for And {
     }
 
     fn make_operation(&self) -> i16 {
+        let operand1 = match self.operands[0].parse::<i16>() {
+            Ok(num) => num,
+            Err(_) => 0,
+        };
+        let operand2 = match self.operands[1].parse::<i16>() {
+            Ok(num) => num,
+            Err(_) => 0,
+        };
+        let result = operand1 & operand2;
+        if result != 0 {
+            return -1;
+        }
         return 0;
     }
     fn quantity(&self) -> usize {
@@ -130,6 +151,9 @@ impl Operation for Or {
     }
 
     fn make_operation(&self) -> i16 {
+        if self.operands[0] == "-1" || self.operands[1] == "-1" {
+            return -1;
+        }
         return 0;
     }
     fn quantity(&self) -> usize {
@@ -152,6 +176,23 @@ impl Operation for Not {
     }
 
     fn make_operation(&self) -> i16 {
+        let operand1 = match self.operands[0].parse::<i16>() {
+            Ok(num) => num,
+            Err(_) => 0,  
+        };
+    
+        let operand2 = match self.operands[1].parse::<i16>() {
+            Ok(num) => num,
+            Err(_) => 0,  
+        };
+    
+        let result = operand1 | operand2;
+    
+    
+        if result != 0 {
+            return -1;  
+        }
+        
         return 0;
     }
     fn quantity(&self) -> usize {

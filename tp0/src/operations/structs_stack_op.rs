@@ -1,6 +1,6 @@
-use std::usize;
 use crate::operations::operation_trait::Operation;
 use std::collections::HashMap;
+use std::usize;
 
 pub struct Dup {
     pub name: String,

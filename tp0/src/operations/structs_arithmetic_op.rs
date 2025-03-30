@@ -1,6 +1,6 @@
-use std::usize;
 use crate::operations::operation_trait::Operation;
 use std::collections::HashMap;
+use std::usize;
 const SIMPLE_OPERATION: usize = 2;
 //Operaciones del aritmeticas
 pub struct Sum {
@@ -114,7 +114,6 @@ impl Operation for Div {
         return &self.name;
     }
 }
-
 
 pub fn load_basic_operations_map() -> HashMap<String, Box<dyn Fn() -> Box<dyn Operation>>> {
     let mut basic_operations: HashMap<String, Box<dyn Fn() -> Box<dyn Operation>>> = HashMap::new();
