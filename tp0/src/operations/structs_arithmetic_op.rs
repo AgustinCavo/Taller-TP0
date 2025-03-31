@@ -6,35 +6,49 @@ const SIMPLE_OPERATION: usize = 2;
 pub struct Sum {
     pub name: String,
     pub quantity: usize,
-    pub operands: Vec<i16>,
+    pub operands: Vec<String>,
 }
 pub struct Sub {
     pub name: String,
     pub quantity: usize,
-    pub operands: Vec<i16>,
+    pub operands: Vec<String>,
 }
 pub struct Div {
     pub name: String,
     pub quantity: usize,
-    pub operands: Vec<i16>,
+    pub operands: Vec<String>,
 }
 pub struct Mul {
     pub name: String,
     pub quantity: usize,
-    pub operands: Vec<i16>,
+    pub operands: Vec<String>,
 }
 
 impl Operation for Sum {
     fn add_operand(&mut self, element: i16) -> bool {
         if self.operands.len() < SIMPLE_OPERATION {
-            self.operands.push(element);
+            self.operands.push(element.to_string());
             return true;
         }
         return false;
     }
 
-    fn make_operation(&self) -> i16 {
-        return self.operands[0] + self.operands[1];
+    fn make_operation(&mut self) -> i16 {
+        match self.operands[0].parse::<i16>() {
+            Ok(operand1) => {
+                match self.operands[1].parse::<i16>() {
+                    Ok(operand2) => operand1 + operand2,
+                    Err(_) => { 
+                        println!("Error al convertir los numeros de la operacion");
+                        0
+                    }
+                }
+            },
+            Err(_) => {
+                println!("Error al convertir los numeros de la operacion");
+                0
+            }
+        }
     }
     fn quantity(&self) -> usize {
         return self.quantity;
@@ -44,19 +58,36 @@ impl Operation for Sum {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 
 impl Operation for Sub {
     fn add_operand(&mut self, element: i16) -> bool {
         if self.operands.len() < SIMPLE_OPERATION {
-            self.operands.push(element);
+            self.operands.push(element.to_string());
             return true;
         }
         return false;
     }
-    fn make_operation(&self) -> i16 {
-        return self.operands[1] - self.operands[0];
+    fn make_operation(&mut self) -> i16 {
+        match self.operands[0].parse::<i16>() {
+            Ok(operand1) => {
+                match self.operands[1].parse::<i16>() {
+                    Ok(operand2) => operand1 - operand2,
+                    Err(_) => { 
+                        println!("Error al convertir los numeros de la operacion");
+                        0
+                    }
+                }
+            },
+            Err(_) => {
+                println!("Error al convertir los numeros de la operacion");
+                0
+            }
+        }
     }
 
     fn quantity(&self) -> usize {
@@ -67,19 +98,36 @@ impl Operation for Sub {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 
 impl Operation for Mul {
     fn add_operand(&mut self, element: i16) -> bool {
         if self.operands.len() < SIMPLE_OPERATION {
-            self.operands.push(element);
+            self.operands.push(element.to_string());
             return true;
         }
         return false;
     }
-    fn make_operation(&self) -> i16 {
-        return self.operands[1] * self.operands[0];
+    fn make_operation(&mut self) -> i16 {
+        match self.operands[0].parse::<i16>() {
+            Ok(operand1) => {
+                match self.operands[1].parse::<i16>() {
+                    Ok(operand2) => operand1 * operand2,
+                    Err(_) => { 
+                        println!("Error al convertir los numeros de la operacion");
+                        0
+                    }
+                }
+            },
+            Err(_) => {
+                println!("Error al convertir los numeros de la operacion");
+                0
+            }
+        }
     }
     fn quantity(&self) -> usize {
         return self.quantity;
@@ -90,20 +138,46 @@ impl Operation for Mul {
     fn name(&self) -> &str {
         return &self.name;
     }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
+    }
 }
-
 impl Operation for Div {
     fn add_operand(&mut self, element: i16) -> bool {
+        
         if element == 0 {
+            println!("division-by-zero");
             return false;
         } else {
-            self.operands.push(element);
+            self.operands.push(element.to_string());
             return true;
         }
     }
-    fn make_operation(&self) -> i16 {
-        return self.operands[1] / self.operands[0];
+    fn make_operation(&mut self) -> i16 {
+        match self.operands[0].parse::<i16>() {
+            Ok(operand1) => {
+                match self.operands[1].parse::<i16>() {
+                    Ok(operand2) => {
+                        if operand2 == 0 {
+                            println!("Error: División por cero.");
+                            return 0; 
+                        }
+                        operand1 / operand2  
+                    },
+                    Err(_) => {
+                        
+                        println!("Error al convertir el segundo operando a i16.");
+                        0 
+                    }
+                }
+            },
+            Err(_) => {
+                println!("Error al convertir el primer operando a i16.");
+                0
+            }
+        }
     }
+    
     fn quantity(&self) -> usize {
         return self.quantity;
     }
@@ -112,6 +186,9 @@ impl Operation for Div {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 
