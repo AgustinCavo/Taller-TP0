@@ -39,7 +39,7 @@ impl Operation for Dot {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -64,7 +64,7 @@ impl Operation for Emit {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -93,7 +93,7 @@ impl Operation for Quotes {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }

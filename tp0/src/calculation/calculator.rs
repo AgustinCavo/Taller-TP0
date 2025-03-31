@@ -14,42 +14,40 @@ pub fn calculate(data: &mut Vec<String>) {
     let mut ongoing_ops: Vec<Box<dyn Operation>> = Vec::new();
     let mut i: i32 = (data.len() - 1) as i32;
     while i >= 0 {
+
         if data[i as usize] == "cr" {
-            print!("\n");
+
             data.remove(i as usize);
         } else if get_operation(data, &mut i, &mut ongoing_ops) {
-            println!("Cargué operación: {}", &data[i as usize]);
+
             data.remove(i as usize);
-            println!("data restante : {:?}", data);
+ 
         } else {
             if let Some(last_op) = ongoing_ops.last_mut() {
                 if basic_operations.contains_key(last_op.name())
                     || conditional_operations.contains_key(last_op.name())
                 {
                     if basic_operations_handler(data, &mut i, last_op) {
-                        println!("realize operacion {}", last_op.name());
+       
                         ongoing_ops.pop();
                     }
                 } else if stack_operations.contains_key(last_op.name()) {
                     if stack_operations_handler(data, &mut i, last_op) {
-                         println!("realize operacion {}", last_op.name());
+       
                         ongoing_ops.pop();
                     }
                 } else if printing_operations.contains_key(last_op.name()) {
                     if printing_operations_handler(data, &mut i, last_op) {
-                        println!("realize operacion {}", last_op.name());
+       
                         ongoing_ops.pop();
                     }
                 } else if last_op.name()=="if"{
-                    println!("arranca if");
+
                     if conditional_operation_handler(data, &mut i, last_op){
-                        println!("realize operacion {}", last_op.name());
+
                         ongoing_ops.pop();
                     }
                 }
-            } else {
-                println!("deberias saltar no matar {}", &data[i as usize]);
-                println!("{}",i);
             }
         }
         i -= 1;
@@ -57,7 +55,6 @@ pub fn calculate(data: &mut Vec<String>) {
     if ongoing_ops.len() > 0 {
         println!("stack-underflow");
     }
-    println!("finish calculations")
 }
 fn get_operation(
     data: &mut Vec<String>,
@@ -89,7 +86,9 @@ fn get_operation(
         return true;
     }
     if &data[*i as usize]=="then"{
+    
         ongoing_ops.push(if_struct_creation(data,i));
+    
         return true;
     }
     false

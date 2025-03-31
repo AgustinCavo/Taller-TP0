@@ -20,11 +20,12 @@ impl Operation for Warhouseif{
     }
 
     fn make_operation(&mut self) -> i16 {
-        if self.operands[0] == "0"{
+        if self.operands[0] == "0"{         
             self.status = 0;
         } else {
             self.status = 1;
         }
+
         return 0;
     }
     fn quantity(&self) -> usize {
@@ -36,16 +37,19 @@ impl Operation for Warhouseif{
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
-        if self.status==0{
-            &self.no
-        }else{
-            &self.yes
+    fn get_operands(&self) -> &Vec<String> {
+        if self.status == 0 {
+            &self.no  
+        } else {
+            &self.yes  
         }
     }
 }
 
 pub fn if_struct_creation(data: &mut Vec<String>,i: &mut i32,)->Box<dyn Operation>{
+    let mut nested_if_count: i32=1;
+    let mut residual_count: i32=0;
+    let mut aux: Vec<String>=Vec::new();
     let mut if_operation = Warhouseif {
         name: "if".to_string(),
         quantity: 1,  
@@ -56,23 +60,35 @@ pub fn if_struct_creation(data: &mut Vec<String>,i: &mut i32,)->Box<dyn Operatio
     };
     data.pop();
     *i-=1;
-    while (*i as usize) < data.len() && data[*i as usize] != "else" && data[*i as usize] != "if" {
-        if_operation.yes.push(data[*i as usize].to_string()); 
-        data.remove(*i as usize); 
+    while nested_if_count!=0{
+        
+        let current_item = &data[*i as usize];
+ 
+        aux.push(current_item.to_string());
+ 
+        if current_item=="then"{
+            nested_if_count+=1;
+        
+        }
+        if current_item=="if"{
+            if nested_if_count==1{
+                aux.pop();
+                if_operation.yes=aux.clone();
+                
+            }
+            nested_if_count-=1;
+        }
+        if current_item=="else"{
+            if nested_if_count ==1{
+                aux.pop();
+                if_operation.no=aux.clone();
+            }
+        }
+        residual_count+=1;
         *i-=1;
     }
-    if (*i as usize)< data.len() && data[*i as usize] == "else" {
-        data.remove(*i as usize);
-        *i-=1; 
-        while (*i as usize) < data.len() && data[*i as usize] != "if" {
-         
-            if_operation.no.push(data[*i as usize].to_string()); 
-            data.remove(*i as usize);
-            *i-=1; 
-        }
+    for _ in 0..residual_count {
+        data.pop();
     }
-    println!("data : {:?}", data);
-    println!("Instrucciones YES: {:?}", if_operation.yes);
-    println!("Instrucciones NO: {:?}", if_operation.no);
-    Box::new(if_operation) 
+    Box::new(if_operation)
 }

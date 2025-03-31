@@ -59,7 +59,7 @@ impl Operation for Sum {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -99,7 +99,7 @@ impl Operation for Sub {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -138,7 +138,7 @@ impl Operation for Mul {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -187,7 +187,7 @@ impl Operation for Div {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
