@@ -7,7 +7,6 @@ mod parsing;
 use calculation::calculator::*;
 use parsing::parsing::*;
 
-
 const ERROR_DEFINICIONES: &str = "Error al procesar las definiciones:";
 const ERROR_LECTURA_ARCHIVO: &str = "Error al procesar el archivo:";
 const ERROR_ESCRITURA_ARCHIVO: &str = "Error al escribir el archivo de salida:";
@@ -21,9 +20,7 @@ fn main() {
             Ok(mut data_cleaned) => {
                 calculate(&mut data_cleaned);
                 match write_stack_results(data_cleaned) {
-                    Ok(_) => {
-                        
-                    }
+                    Ok(_) => {}
                     Err(e) => {
                         println!("{} {}", ERROR_ESCRITURA_ARCHIVO, e);
                     }
@@ -45,7 +42,7 @@ fn write_stack_results(vec: Vec<String>) -> io::Result<()> {
         Err(e) => return Err(e),
     };
 
-   for element in vec {
+    for element in vec {
         write!(resutls, "{} ", element)?;
     }
 

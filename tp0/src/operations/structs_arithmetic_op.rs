@@ -35,13 +35,11 @@ impl Operation for Sum {
 
     fn make_operation(&mut self) -> i16 {
         match self.operands[0].parse::<i16>() {
-            Ok(operand1) => {
-                match self.operands[1].parse::<i16>() {
-                    Ok(operand2) => operand1 + operand2,
-                    Err(_) => { 
-                        println!("Error al convertir los numeros de la operacion");
-                        0
-                    }
+            Ok(operand1) => match self.operands[1].parse::<i16>() {
+                Ok(operand2) => operand1 + operand2,
+                Err(_) => {
+                    println!("Error al convertir los numeros de la operacion");
+                    0
                 }
             },
             Err(_) => {
@@ -74,13 +72,11 @@ impl Operation for Sub {
     }
     fn make_operation(&mut self) -> i16 {
         match self.operands[0].parse::<i16>() {
-            Ok(operand1) => {
-                match self.operands[1].parse::<i16>() {
-                    Ok(operand2) => operand1 - operand2,
-                    Err(_) => { 
-                        println!("Error al convertir los numeros de la operacion");
-                        0
-                    }
+            Ok(operand1) => match self.operands[1].parse::<i16>() {
+                Ok(operand2) => operand1 - operand2,
+                Err(_) => {
+                    println!("Error al convertir los numeros de la operacion");
+                    0
                 }
             },
             Err(_) => {
@@ -114,13 +110,11 @@ impl Operation for Mul {
     }
     fn make_operation(&mut self) -> i16 {
         match self.operands[0].parse::<i16>() {
-            Ok(operand1) => {
-                match self.operands[1].parse::<i16>() {
-                    Ok(operand2) => operand1 * operand2,
-                    Err(_) => { 
-                        println!("Error al convertir los numeros de la operacion");
-                        0
-                    }
+            Ok(operand1) => match self.operands[1].parse::<i16>() {
+                Ok(operand2) => operand1 * operand2,
+                Err(_) => {
+                    println!("Error al convertir los numeros de la operacion");
+                    0
                 }
             },
             Err(_) => {
@@ -144,7 +138,6 @@ impl Operation for Mul {
 }
 impl Operation for Div {
     fn add_operand(&mut self, element: i16) -> bool {
-        
         if element == 0 {
             println!("division-by-zero");
             return false;
@@ -155,20 +148,17 @@ impl Operation for Div {
     }
     fn make_operation(&mut self) -> i16 {
         match self.operands[0].parse::<i16>() {
-            Ok(operand1) => {
-                match self.operands[1].parse::<i16>() {
-                    Ok(operand2) => {
-                        if operand2 == 0 {
-                            println!("Error: División por cero.");
-                            return 0; 
-                        }
-                        operand1 / operand2  
-                    },
-                    Err(_) => {
-                        
-                        println!("Error al convertir el segundo operando a i16.");
-                        0 
+            Ok(operand1) => match self.operands[1].parse::<i16>() {
+                Ok(operand2) => {
+                    if operand2 == 0 {
+                        println!("Error: División por cero.");
+                        return 0;
                     }
+                    operand1 / operand2
+                }
+                Err(_) => {
+                    println!("Error al convertir el segundo operando a i16.");
+                    0
                 }
             },
             Err(_) => {
@@ -177,7 +167,7 @@ impl Operation for Div {
             }
         }
     }
-    
+
     fn quantity(&self) -> usize {
         return self.quantity;
     }

@@ -6,7 +6,7 @@ pub fn basic_operations_handler(
     last_op: &mut Box<dyn Operation>,
 ) -> bool {
     if let Ok(operand) = data[*i as usize].parse::<i16>() {
-        last_op.add_operand(operand);     
+        last_op.add_operand(operand);
         data.remove(*i as usize);
 
         if last_op.operands() == last_op.quantity() as usize {
@@ -118,18 +118,21 @@ pub fn conditional_operation_handler(
     last_op: &mut Box<dyn Operation>,
 ) -> bool {
     if let Ok(operand) = data[*i as usize].parse::<i16>() {
-        last_op.add_operand(operand);     
+        last_op.add_operand(operand);
 
         if last_op.operands() == last_op.quantity() as usize {
             last_op.make_operation();
-            let operands = last_op.get_operands().iter().cloned().collect::<Vec<String>>();
+            let operands = last_op
+                .get_operands()
+                .iter()
+                .cloned()
+                .collect::<Vec<String>>();
 
             for operand in operands {
-
-                data.insert(0,operand);
-                *i+=1;
+                data.insert(0, operand);
+                *i += 1;
             }
-            
+
             return true;
         } else {
             return false;
