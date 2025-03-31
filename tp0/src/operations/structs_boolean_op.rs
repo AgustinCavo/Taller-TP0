@@ -56,7 +56,7 @@ impl Operation for Equ {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -84,7 +84,7 @@ impl Operation for Grt {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -112,7 +112,7 @@ impl Operation for Lst {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -149,7 +149,7 @@ impl Operation for And {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -177,7 +177,7 @@ impl Operation for Or {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -218,7 +218,7 @@ impl Operation for Not {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }

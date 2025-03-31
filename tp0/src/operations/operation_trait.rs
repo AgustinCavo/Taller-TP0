@@ -4,5 +4,5 @@ pub trait Operation {
     fn operands(&self) -> usize;
     fn quantity(&self) -> usize;
     fn name(&self) -> &str;
-    fn get_operands(&self)-> &[String];
+    fn get_operands(&self)-> &Vec<String>;
 }

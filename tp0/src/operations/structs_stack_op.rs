@@ -53,7 +53,7 @@ impl Operation for Dup {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -83,7 +83,7 @@ impl Operation for Drop {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -113,7 +113,7 @@ impl Operation for Swap {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -143,7 +143,7 @@ impl Operation for Rot {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }
@@ -173,7 +173,7 @@ impl Operation for Over {
     fn name(&self) -> &str {
         return &self.name;
     }
-    fn get_operands(&self) -> &[String] {
+    fn get_operands(&self) -> &Vec<String> {
         &self.operands
     }
 }

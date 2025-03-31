@@ -7,17 +7,13 @@ mod parsing;
 use calculation::calculator::*;
 use parsing::parsing::*;
 
-const CANTIDAD_ARGUMENTOS: usize = 2;
+
 const ERROR_DEFINICIONES: &str = "Error al procesar las definiciones:";
 const ERROR_LECTURA_ARCHIVO: &str = "Error al procesar el archivo:";
 const ERROR_ESCRITURA_ARCHIVO: &str = "Error al escribir el archivo de salida:";
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-   /* if args.len() >= CANTIDAD_ARGUMENTOS {
-        eprint!("Pasar la ruta del archivo como argumento");
-        std::process::exit(1);
-    }*/
     let path = &args[1];
 
     match parse_fth(path) {
@@ -26,7 +22,7 @@ fn main() {
                 calculate(&mut data_cleaned);
                 match write_stack_results(data_cleaned) {
                     Ok(_) => {
-                        println!("ok");
+                        
                     }
                     Err(e) => {
                         println!("{} {}", ERROR_ESCRITURA_ARCHIVO, e);
