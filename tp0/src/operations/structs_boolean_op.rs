@@ -41,7 +41,7 @@ impl Operation for Equ {
         return false;
     }
 
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         if self.operands[0] == self.operands[1] {
             return -1;
         }
@@ -56,6 +56,9 @@ impl Operation for Equ {
     fn name(&self) -> &str {
         return &self.name;
     }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
+    }
 }
 impl Operation for Grt {
     fn add_operand(&mut self, element: i16) -> bool {
@@ -66,7 +69,7 @@ impl Operation for Grt {
         return false;
     }
 
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         if self.operands[0] > self.operands[1] {
             return -1;
         }
@@ -81,6 +84,9 @@ impl Operation for Grt {
     fn name(&self) -> &str {
         return &self.name;
     }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
+    }
 }
 impl Operation for Lst {
     fn add_operand(&mut self, element: i16) -> bool {
@@ -91,7 +97,7 @@ impl Operation for Lst {
         return false;
     }
 
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         if self.operands[0] < self.operands[1] {
             return -1;
         }
@@ -106,6 +112,9 @@ impl Operation for Lst {
     fn name(&self) -> &str {
         return &self.name;
     }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
+    }
 }
 impl Operation for And {
     fn add_operand(&mut self, element: i16) -> bool {
@@ -116,7 +125,7 @@ impl Operation for And {
         return false;
     }
 
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         let operand1 = match self.operands[0].parse::<i16>() {
             Ok(num) => num,
             Err(_) => 0,
@@ -140,6 +149,9 @@ impl Operation for And {
     fn name(&self) -> &str {
         return &self.name;
     }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
+    }
 }
 impl Operation for Or {
     fn add_operand(&mut self, element: i16) -> bool {
@@ -150,7 +162,7 @@ impl Operation for Or {
         return false;
     }
 
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         if self.operands[0] == "-1" || self.operands[1] == "-1" {
             return -1;
         }
@@ -165,6 +177,9 @@ impl Operation for Or {
     fn name(&self) -> &str {
         return &self.name;
     }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
+    }
 }
 impl Operation for Not {
     fn add_operand(&mut self, element: i16) -> bool {
@@ -175,7 +190,7 @@ impl Operation for Not {
         return false;
     }
 
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         let operand1 = match self.operands[0].parse::<i16>() {
             Ok(num) => num,
             Err(_) => 0,
@@ -202,6 +217,9 @@ impl Operation for Not {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 

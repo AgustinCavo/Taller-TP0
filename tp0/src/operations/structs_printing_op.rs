@@ -26,7 +26,7 @@ impl Operation for Dot {
         return false;
     }
 
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         print!("{} ", self.operands[0]);
         return 0;
     }
@@ -39,6 +39,9 @@ impl Operation for Dot {
     fn name(&self) -> &str {
         return &self.name;
     }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
+    }
 }
 impl Operation for Emit {
     fn add_operand(&mut self, element: i16) -> bool {
@@ -49,7 +52,7 @@ impl Operation for Emit {
         return false;
     }
 
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         return 0;
     }
     fn quantity(&self) -> usize {
@@ -60,6 +63,9 @@ impl Operation for Emit {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 
@@ -72,7 +78,7 @@ impl Operation for Quotes {
         return false;
     }
 
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         if self.operands[0] < self.operands[1] {
             return -1;
         }
@@ -86,6 +92,9 @@ impl Operation for Quotes {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 

@@ -33,7 +33,7 @@ impl Operation for Dup {
         self.operands.push(element.to_string());
         return true;
     }
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         println!("{}", &self.operands[0]);
         match self.operands[0].parse::<i16>() {
             Ok(resuslt) => {
@@ -52,6 +52,9 @@ impl Operation for Dup {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 
@@ -60,7 +63,7 @@ impl Operation for Drop {
         self.operands.push(element.to_string());
         return true;
     }
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         println!("{}", &self.operands[0]);
         match self.operands[0].parse::<i16>() {
             Ok(resuslt) => {
@@ -79,6 +82,9 @@ impl Operation for Drop {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 
@@ -87,7 +93,7 @@ impl Operation for Swap {
         self.operands.push(element.to_string());
         return true;
     }
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         println!("{}", &self.operands[0]);
         match self.operands[0].parse::<i16>() {
             Ok(resuslt) => {
@@ -106,6 +112,9 @@ impl Operation for Swap {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 
@@ -114,7 +123,7 @@ impl Operation for Rot {
         self.operands.push(element.to_string());
         return true;
     }
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         println!("{}", &self.operands[0]);
         match self.operands[0].parse::<i16>() {
             Ok(resuslt) => {
@@ -133,6 +142,9 @@ impl Operation for Rot {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 
@@ -141,7 +153,7 @@ impl Operation for Over {
         self.operands.push(element.to_string());
         return true;
     }
-    fn make_operation(&self) -> i16 {
+    fn make_operation(&mut self) -> i16 {
         println!("{}", &self.operands[0]);
         match self.operands[0].parse::<i16>() {
             Ok(resuslt) => {
@@ -160,6 +172,9 @@ impl Operation for Over {
     }
     fn name(&self) -> &str {
         return &self.name;
+    }
+    fn get_operands(&self) -> &[String] {
+        &self.operands
     }
 }
 

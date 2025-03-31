@@ -6,14 +6,12 @@ pub fn basic_operations_handler(
     last_op: &mut Box<dyn Operation>,
 ) -> bool {
     if let Ok(operand) = data[*i as usize].parse::<i16>() {
-        last_op.add_operand(operand);
-        //println!("Agregué operando: {}", operand);
+        last_op.add_operand(operand);     
         data.remove(*i as usize);
 
         if last_op.operands() == last_op.quantity() as usize {
             let result = last_op.make_operation();
             data.insert(*i as usize, result.to_string());
-            // println!("Resultado de la operación: {}", result);
             *i += 1;
             return true;
         } else {
@@ -117,6 +115,31 @@ pub fn printing_operations_handler(
     println!("No hay suficientes elementos para realizar la operación.");
     return false;
 }
+
+pub fn conditional_operation_handler(
+    data: &mut Vec<String>,
+    i: &mut i32,
+    last_op: &mut Box<dyn Operation>,
+) -> bool {
+    if let Ok(operand) = data[*i as usize].parse::<i16>() {
+        last_op.add_operand(operand);     
+        data.remove(*i as usize);
+
+        if last_op.operands() == last_op.quantity() as usize {
+            last_op.make_operation();
+            let operands=last_op.get_operands();
+            for operand in operands.iter() { 
+                data.insert(*i as usize, operand.to_string()); 
+                *i += 1;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
+
 fn ascii_to_string(ascii_value: Option<i16>) -> Option<String> {
     if let Some(value) = ascii_value {
         // Convertimos el valor ASCII a un carácter y luego a String
